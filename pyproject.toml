@@ -1,0 +1,54 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "mini-nanobot"
+version = "0.1.0"
+description = "从零复现练习项目"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "langchain==1.2.7",                                  # ch1 核心
+    "langchain-openai>=1.3.5",                           # ch1 ChatOpenAI（千问也走它）
+    "langgraph>=1.0.10,<1.1",                            # ch1 图；ch4 外层 StateGraph
+    "langgraph-prebuilt<1.0.9",                          # ch1 create_agent（<1.0.9 别动）
+    "langgraph-checkpoint-sqlite>=3.1.0",                # ch2 AsyncSqliteSaver 短期记忆
+    "openai>=2.46.0",                                    # ch1 底层 SDK
+    "pydantic",                                          # ch1 配置严格校验
+    "python-dotenv",                                     # ch1 读 .env
+    "rich",                                              # ch1/ch2 终端彩色 + Markdown
+    "langchain-mcp-adapters",                            # ch5 可选 MCP（现在装上也无妨）
+]
+
+[project.scripts]
+mini-nanobot = "mini_nanobot.cli:run"
+
+[dependency-groups]
+dev = [
+    "pytest",                                            # 测试
+    "pytest-asyncio",                                    # 异步测试（ch2 起大量 async 测试）
+    "ruff",                                              # 静态检查
+]
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+mini_nanobot = ["templates/*.md"]                       # ch3 起：三份记忆模板要打进包
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+pythonpath = ["src"]
+
+[tool.ruff]
+target-version = "py311"
+
+[tool.ruff.lint]
+# TRY004/BLE001 是本项目刻意保留的写法：
+#  - 工具函数需捕获所有异常并转成给模型看的错误文本（BLE001）
+#  - 会话文件读取错误用 ValueError 带中文可行动提示（TRY004）
+ignore = ["TRY004", "BLE001"]

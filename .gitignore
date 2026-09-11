@@ -1,0 +1,21 @@
+# 敏感/环境
+.env
+
+# Python
+__pycache__/
+*.pyc
+*.py[oc]
+build/
+dist/
+*.egg-info/
+.ruff_cache/
+.pytest_cache/
+
+# 虚拟环境
+.venv/
+
+# 运行数据（本地记忆 / 会话库）
+workspace/
+
+# 编辑器配置
+*.code-workspace
